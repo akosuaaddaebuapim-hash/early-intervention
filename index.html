@@ -1,17 +1,516 @@
 
----
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stella Amoako — Developmental Intervention Specialist</title>
+  <meta name="description" content="Early Intervention therapy for babies and young children. Therapy services, educational toys, family & school support. Phone: 053-027-4063 • Email: dwomo28@gmail.com" />
+  <meta name="theme-color" content="#F8FAFC" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <!-- Calendly widget (replace with your URL) -->
+  <script src="https://assets.calendly.com/assets/external/widget.js" defer></script>
+  <!-- tsParticles for ambient particles -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" defer></script>
+  <!-- GSAP for scroll/parallax -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <!-- Lottie for lightweight animations -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js" defer></script>
 
-### 💎 Bonus Tip  
-If you’re using **Tailwind CSS**, add these utilities to `tailwind.config.js` for custom textures and gradients:
-```js
-theme: {
-  extend: {
-    backgroundImage: {
-      'noise': "url('/noise.svg')",
-      'gradient-glass': "linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2))",
-    },
-    boxShadow: {
-      'soft': '0 8px 30px rgba(0,0,0,0.05)',
-    },
-  },
-}
+  <style>
+    /* --------- VARIABLES & RESET --------- */
+    :root{
+      --bg-1: linear-gradient(180deg,#f6fbff 0%, #eef7ff 100%);
+      --bg-2: linear-gradient(180deg,#071022 0%, #0f1724 100%);
+      --primary:#6b46c1; /* warm purple */
+      --accent:#06b6d4;  /* teal */
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.06);
+      --radius:16px;
+      --maxwidth:1120px;
+      --card-bg:rgba(255,255,255,0.85);
+      --text-dark:#03202a;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color-scheme: light dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg-1);
+      color:var(--text-dark);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
+      padding:28px;
+      display:flex;
+      justify-content:center;
+    }
+    .wrap{max-width:var(--maxwidth);width:100%}
+    a{color:inherit}
+    /* --------- THEME SWITCH (LIGHT/DARK) --------- */
+    .theme-toggle{position:fixed;right:18px;top:18px;z-index:9999;background:linear-gradient(90deg,var(--primary),var(--accent));color:white;border-radius:999px;padding:8px 12px;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(6,95,70,0.08)}
+    [data-theme="dark"]{background:var(--bg-2);color:#e6eef6}
+    [data-theme="dark"] .card{background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); color: #e6eef6; border:1px solid rgba(255,255,255,0.04)}
+    /* --------- NAV / HERO --------- */
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:56px;height:56px;border-radius:12px;display:inline-grid;place-items:center;
+      background:linear-gradient(135deg,var(--primary),var(--accent));color:white;font-weight:700;font-family:"Playfair Display",serif;font-size:18px;
+      box-shadow:0 8px 30px rgba(11,23,44,0.12);
+    }
+    nav ul{display:flex;gap:12px;padding:0;margin:0;list-style:none;align-items:center}
+    nav a.cta{background:var(--primary);color:white;padding:10px 14px;border-radius:12px;text-decoration:none}
+    /* hero */
+    .hero{position:relative;display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-bottom:22px}
+    .hero-left{padding:28px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.85));box-shadow:0 14px 50px rgba(11,23,44,0.06)}
+    .hero h1{margin:0;font-family:"Playfair Display",serif;font-size:28px;line-height:1.05}
+    .hero p{margin:12px 0;color:var(--muted)}
+    .typed{color:var(--primary);font-weight:700}
+    .hero-cta{display:flex;gap:10px;margin-top:14px}
+    .btn{padding:10px 14px;border-radius:12px;border:none;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--accent));color:white}
+    .btn-ghost{background:transparent;border:1px solid rgba(10,20,30,0.06)}
+    /* hero-right - cards */
+    .card{padding:18px;border-radius:14px;background:var(--card-bg);box-shadow:0 10px 40px rgba(2,6,23,0.06);border:1px solid rgba(0,0,0,0.04)}
+    .stat{display:flex;align-items:center;gap:12px}
+    .stat strong{font-size:20px}
+    /* --------- PARTICLES CANVAS --------- */
+    #tsparticles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.55}
+    /* --------- SERVICES / TESTIMONIALS / GALLERY --------- */
+    section{margin:18px 0;position:relative;z-index:5}
+    .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+    .service{padding:16px;border-radius:12px;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.04)}
+    .glass{backdrop-filter: blur(6px);background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));}
+    .testimonial{display:flex;gap:12px;align-items:flex-start}
+    .testimonial img{width:64px;height:64px;border-radius:12px;object-fit:cover}
+    .carousel{display:flex;gap:12px;overflow:hidden}
+    /* --------- BOOKING / CALENDLY MODAL --------- */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:9998}
+    .modal.open{display:flex}
+    .modal .modal-inner{width:min(980px,95%);max-height:90vh;overflow:auto;padding:16px;border-radius:12px;background:white}
+    [data-theme="dark"] .modal .modal-inner{background:#071827;color:#e6eef6}
+    /* --------- CONTACT / FOOTER --------- */
+    footer{margin-top:28px;padding-top:18px;border-top:1px solid rgba(10,20,30,0.04);display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .contact-list{display:flex;gap:12px;align-items:center}
+    .floating-actions{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:8px;z-index:9999}
+    .action-btn{width:56px;height:56px;border-radius:999px;background:linear-gradient(90deg,var(--primary),var(--accent));color:white;display:grid;place-items:center;text-decoration:none;box-shadow:0 10px 30px rgba(11,23,44,0.12)}
+    /* --------- RESPONSIVE --------- */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;gap:18px}
+      .hero-right{order:2}
+    }
+    /* prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none!important;animation:none!important}
+    }
+  </style>
+
+  <script>
+    /* Small inline JSON-LD for LocalBusiness / Person */
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Stella Amoako",
+      "jobTitle": "Developmental Intervention Specialist",
+      "description": "Early Intervention therapy for babies and young children with developmental delays. Therapy services, educational toys and family/school support.",
+      "telephone": "053-027-4063",
+      "email": "dwomo28@gmail.com",
+      "sameAs": []
+    };
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.text = JSON.stringify(jsonLd);
+      document.head.appendChild(s);
+    });
+  </script>
+</head>
+<body data-theme="light">
+  <canvas id="tsparticles" aria-hidden="true"></canvas>
+
+  <button class="theme-toggle" id="themeToggle" aria-pressed="false" title="Toggle theme">🌙</button>
+
+  <div class="wrap" role="document">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">SA</div>
+        <div>
+          <div style="font-weight:700">Stella Amoako</div>
+          <div style="font-size:13px;color:var(--muted)">Developmental Intervention Specialist</div>
+        </div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#testimonials">Success Stories</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a class="cta" href="#book">Book a Consultation</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <main>
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero-left card glass">
+          <h1 id="hero-heading">Early Intervention that helps little ones thrive</h1>
+          <p>
+            I’m <strong>Stella Amoako</strong>, a Developmental Intervention Specialist with over a decade of experience as an educator.
+            I help babies and young children with developmental delays reach milestones and equip families with the tools to support growth.
+          </p>
+
+          <p aria-hidden="true">Coming to Ghana: <strong id="coming-cta">Services launching soon 🇬🇭</strong></p>
+
+          <div class="hero-cta">
+            <button class="btn btn-primary" id="openBook">Book a free consultation ✨</button>
+            <button class="btn btn-ghost" id="viewTestimonials">See success stories</button>
+          </div>
+
+          <p style="margin-top:12px;color:var(--muted);font-size:14px">Phone: <a href="tel:+233530274063">053-027-4063</a> • Email: <a href="mailto:dwomo28@gmail.com">dwomo28@gmail.com</a></p>
+        </div>
+
+        <aside class="hero-right card" aria-label="Quick stats and contact">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="stat">
+              <div>
+                <div style="font-size:13px;color:var(--muted)">Experience</div>
+                <strong>10+ years</strong>
+              </div>
+            </div>
+
+            <div class="stat">
+              <div>
+                <div style="font-size:13px;color:var(--muted)">Families helped</div>
+                <strong id="statCount">100+</strong>
+              </div>
+            </div>
+
+            <div class="stat" style="margin-top:8px">
+              <div>
+                <div style="font-size:13px;color:var(--muted)">Services</div>
+                <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+                  <span style="background:rgba(0,0,0,0.04);padding:6px 8px;border-radius:10px;font-size:13px">Therapy</span>
+                  <span style="background:rgba(0,0,0,0.04);padding:6px 8px;border-radius:10px;font-size:13px">Toys & Resources</span>
+                  <span style="background:rgba(0,0,0,0.04);padding:6px 8px;border-radius:10px;font-size:13px">Family Coaching</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:8px">
+              <button class="btn btn-primary" id="callStella" aria-label="Call Stella">Call: 053-027-4063</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- SERVICES -->
+      <section id="services" aria-labelledby="services-heading">
+        <h2 id="services-heading">Our Services</h2>
+        <p style="color:var(--muted)">We support families and schools with targeted early-intervention therapy and educational resources.</p>
+        <div class="grid" style="margin-top:12px">
+          <div class="service card">
+            <h3>Therapy Services</h3>
+            <p>Play-based, evidence-informed therapy for developmental delays — individual and group sessions.</p>
+          </div>
+          <div class="service card">
+            <h3>Educational Toys & Resources</h3>
+            <p>Therapeutic toys, activity packs, and learning guides to continue progress at home.</p>
+          </div>
+          <div class="service card">
+            <h3>Family & School Support</h3>
+            <p>Parent coaching, school consultations, and practical strategies for daily routines.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section id="testimonials" aria-labelledby="testimonials-heading">
+        <h2 id="testimonials-heading">Client Success Stories</h2>
+        <div class="card" style="padding:16px;margin-top:12px">
+          <div class="testimonial">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=fa1b4844a80a6a1e36f8b9d9e0c3c8fe" alt="Happy family">
+            <div>
+              <blockquote style="margin:0 0 8px 0;font-style:italic">
+                “The program was a blessing. My son made amazing strides and reached goals we thought were out of reach.”
+              </blockquote>
+              <div style="color:var(--muted);font-size:14px">— Lorraine</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GALLERY -->
+      <section id="gallery" aria-labelledby="gallery-heading">
+        <h2 id="gallery-heading">What We Do</h2>
+        <p style="color:var(--muted)">Play-based activities, parent coaching, and educational routines (captions explain purpose).</p>
+        <div class="grid" style="margin-top:12px">
+          <figure class="card" style="padding:12px">
+            <img src="https://images.unsplash.com/photo-1584467735878-3a2a6b3d5b6f?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b0eb7c3184b9f5b84a2b3d9f3e4b7e6" alt="Therapy play" style="width:100%;height:160px;object-fit:cover;border-radius:8px">
+            <figcaption style="margin-top:8px;color:var(--muted)">Play & interaction: building body-part recognition with Mr. Potato Head</figcaption>
+          </figure>
+
+          <figure class="card" style="padding:12px">
+            <img src="https://images.unsplash.com/photo-1533158631009-7b5f4f37a4f9?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=4b2d8f53b8e1f6a1ee8f0d6b2d3c6c09" alt="Parent coaching" style="width:100%;height:160px;object-fit:cover;border-radius:8px">
+            <figcaption style="margin-top:8px;color:var(--muted)">Parent coaching: interactive toy routines in the home</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- RESOURCES / BLOG -->
+      <section id="resources" aria-labelledby="resources-heading">
+        <h2 id="resources-heading">Resources & Tips</h2>
+        <p style="color:var(--muted)">Short guides and milestone checklists to support families — coming soon as a resource library.</p>
+      </section>
+
+      <!-- BOOKING SECTION (Modal + Calendly Embed) -->
+      <section id="book" aria-labelledby="book-heading">
+        <h2 id="book-heading">Book a Consultation</h2>
+        <p style="color:var(--muted)">Schedule a free 20-minute consultation to discuss your child’s needs.</p>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;margin-top:12px">
+          <div style="flex:1">
+            <div class="card">
+              <h3>Quick book</h3>
+              <p style="color:var(--muted)">Use the embedded Calendly scheduler or open a direct booking modal.</p>
+              <button class="btn btn-primary" id="openCalendly">Open Scheduler</button>
+            </div>
+          </div>
+
+          <div style="width:320px">
+            <div class="card">
+              <h3>Or request via form</h3>
+              <!-- Simple contact/book form using Formspree (replace action) -->
+              <form id="contactForm" action="https://formspree.io/f/your_form_id" method="POST" aria-label="Booking request">
+                <label class="visually-hidden" for="name">Parent name</label>
+                <input id="name" name="name" type="text" placeholder="Your name" required style="width:100%;padding:10px;margin-bottom:8px;border-radius:8px;border:1px solid rgba(10,20,30,0.04)">
+
+                <label class="visually-hidden" for="childAge">Child age</label>
+                <input id="childAge" name="childAge" type="text" placeholder="Child age (e.g. 2 years)" required style="width:100%;padding:10px;margin-bottom:8px;border-radius:8px;border:1px solid rgba(10,20,30,0.04)">
+
+                <label class="visually-hidden" for="notes">Notes</label>
+                <textarea id="notes" name="notes" rows="3" placeholder="Brief concerns or goals" style="width:100%;padding:10px;margin-bottom:8px;border-radius:8px;border:1px solid rgba(10,20,30,0.04)"></textarea>
+
+                <button type="submit" class="btn btn-primary" style="width:100%">Request booking</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <p style="color:var(--muted);margin-top:8px;font-size:13px">Note: Replace the Calendly URL and Formspree action with your live endpoints. The modal scheduler below will open Calendly inline.</p>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <div>
+          <strong>Contact</strong>
+          <div class="contact-list" style="margin-top:8px">
+            <a href="tel:+233530274063" aria-label="Call Stella">📞 053-027-4063</a>
+            <a href="mailto:dwomo28@gmail.com" aria-label="Email Stella">✉️ dwomo28@gmail.com</a>
+            <a href="https://wa.me/233530274063" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">💬 WhatsApp</a>
+          </div>
+        </div>
+
+        <div style="text-align:right">
+          <div style="color:var(--muted);font-size:13px">Services coming to Ghana</div>
+          <div id="countdown" style="font-weight:700;margin-top:6px">Launching soon</div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Floating quick-actions -->
+  <div class="floating-actions" aria-hidden="false">
+    <a class="action-btn" href="tel:+233530274063" title="Call"><span>📞</span></a>
+    <a class="action-btn" href="mailto:dwomo28@gmail.com" title="Email"><span>✉️</span></a>
+    <a class="action-btn" href="https://wa.me/233530274063" target="_blank" rel="noopener noreferrer" title="WhatsApp"><span>💬</span></a>
+  </div>
+
+  <!-- Booking / Calendly Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+    <div class="modal-inner card" role="document">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="modalTitle">Schedule a consultation</h3>
+        <button id="closeModal" aria-label="Close scheduler">✕</button>
+      </div>
+
+      <div id="calendlyInline" style="margin-top:12px;">
+        <!-- Calendly inline widget will be injected here -->
+        <div style="padding:18px;border-radius:12px;background:linear-gradient(180deg,#f8fafc,#eef2ff);text-align:center;color:#0f1724">
+          <p style="margin:0">Open the scheduler to pick a time. If Calendly is not configured yet, use the form to request a booking.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------------------- Basic interactive behaviors ---------------------- */
+
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.body;
+    function setTheme(theme){
+      root.setAttribute('data-theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '🌞' : '🌙';
+      themeToggle.setAttribute('aria-pressed', theme === 'dark');
+      localStorage.setItem('site-theme', theme);
+    }
+    (function initTheme(){
+      const saved = localStorage.getItem('site-theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(saved || (prefersDark ? 'dark' : 'light'));
+    })();
+    themeToggle.addEventListener('click', ()=> setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+    // Simple typed headline effect (accessible fallback)
+    (function typedHeadline(){
+      const el = document.querySelector('.typed');
+      const target = document.getElementById('hero-heading');
+      const text = 'Early Intervention that helps little ones thrive ✨';
+      if (!target) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        target.textContent = text;
+        return;
+      }
+      let i=0;
+      const speed=30;
+      function tick(){
+        target.textContent = text.slice(0,i);
+        i++;
+        if (i<=text.length) setTimeout(tick, speed);
+      }
+      // run once after load
+      setTimeout(tick, 350);
+    })();
+
+    // Modal & Calendly (replace YOUR_CALENDLY_URL with your actual Calendly link)
+    const modal = document.getElementById('modal');
+    const openBook = document.getElementById('openBook');
+    const openCalendly = document.getElementById('openCalendly');
+    const closeModal = document.getElementById('closeModal');
+    function openScheduler(){
+      // If Calendly is available, use inline widget
+      const calendlyUrl = 'https://calendly.com/YOUR_CALENDLY_URL?hide_gdpr_banner=1';
+      const container = document.getElementById('calendlyInline');
+      container.innerHTML = ''; // clear
+      if (window.Calendly && window.Calendly.initInlineWidget) {
+        const frame = document.createElement('div');
+        frame.style.minHeight = '600px';
+        container.appendChild(frame);
+        window.Calendly.initInlineWidget({url: calendlyUrl, parentElement: frame, prefill: {}, utm: {}});
+      } else {
+        // fallback: provide link
+        const a = document.createElement('a');
+        a.href = calendlyUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'Open Calendly scheduler (opens in new tab)';
+        a.style.display = 'inline-block';
+        a.style.padding = '12px 18px';
+        a.style.background = 'linear-gradient(90deg,var(--primary),var(--accent))';
+        a.style.color = 'white';
+        a.style.borderRadius = '10px';
+        container.appendChild(a);
+      }
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+    openBook?.addEventListener('click', openScheduler);
+    openCalendly?.addEventListener('click', openScheduler);
+    closeModal?.addEventListener('click', ()=> {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+    });
+    modal?.addEventListener('click', (e)=> {
+      if (e.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+    });
+
+    // Contact form basic client feedback
+    document.getElementById('contactForm')?.addEventListener('submit', (e)=>{
+      // allow normal submit to Formspree; show simple toast/prompt
+      setTimeout(()=> alert('Thank you! Your booking request was sent.'), 450);
+    });
+
+    // Floating quick actions have natural hrefs (tel / mailto / wa.me)
+
+    // Countdown for "coming to Ghana" - example date: 2025-12-01
+    (function countdown(){
+      const cdEl = document.getElementById('countdown');
+      const target = new Date('2025-12-01T00:00:00Z'); // customize date
+      if (!cdEl) return;
+      function update(){
+        const now = new Date();
+        const diff = target - now;
+        if (diff <= 0) { cdEl.textContent = 'We are now servicing Ghana 🎉'; return; }
+        const days = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff / (1000*60*60)) % 24);
+        const mins = Math.floor((diff / (1000*60)) % 60);
+        cdEl.textContent = `${days}d ${hours}h ${mins}m`;
+      }
+      update();
+      setInterval(update, 60_000);
+    })();
+
+    // Simple testimonial "carousel" animation using GSAP
+    (function testimonialCarousel(){
+      const el = document.querySelector('#testimonials .card .testimonial');
+      if (!el) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      gsap.to(el, {y: -4, duration: 2, yoyo: true, repeat: -1, ease: 'power1.inOut'});
+    })();
+
+    // Init tsParticles ambient background
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      try {
+        await tsParticles.load('tsparticles', {
+          fullScreen: { enable: false },
+          detectRetina: true,
+          particles: {
+            number: { value: 28 },
+            color: { value: ['#E9D5FF', '#93C5FD', '#BEF264'] },
+            shape: { type: 'circle' },
+            opacity: { value: 0.12 },
+            size: { value: { min: 8, max: 26 } },
+            move: { enable: true, speed: 0.6, direction: 'none', outModes: 'out' },
+            links: { enable: false }
+          },
+          background: { color: 'transparent' },
+          interactivity: {
+            detectsOn: 'window',
+            events: { onHover: { enable: false }, onClick: { enable: false } }
+          }
+        });
+      } catch(e){
+        // silent fail
+      }
+    });
+
+    // Accessibility helpers: focus trap for modal (light)
+    (function modalFocus(){
+      const focusable = 'button, [href], input, textarea, [tabindex]:not([tabindex="-1"])';
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape' && modal.classList.contains('open')) {
+          modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+        }
+      });
+    })();
+
+    // Small analytic-friendly event: send basic hits to console (replace with GA)
+    (function basicTelemetry(){
+      const el = document.getElementById('openBook');
+      el?.addEventListener('click', ()=> console.info('Booking modal opened'));
+    })();
+  </script>
+
+  <noscript>
+    <div style="position:fixed;bottom:0;left:0;right:0;background:#fffbeb;padding:12px;text-align:center;font-weight:600;">
+      This site uses interactive features. For full experience please enable JavaScript.
+    </div>
+  </noscript>
+</body>
+</html>
