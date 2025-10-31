@@ -1,151 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Stella Amoako — Developmental Intervention Specialist</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Helping young children with developmental delays thrive. Early intervention therapy, educational toys and family support. Now serving Ghana." />
+  <meta name="keywords" content="early intervention, developmental delays, therapy Ghana, educational toys, family support" />
+  <meta name="theme-color" content="#0E6D5A" />
 
-Project: Stella Amoako — Developmental Intervention Specialist (single repo)
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:wght@600&display=swap" rel="stylesheet">
 
-Goal
-Build a modern, mobile-first, responsive website for Stella Amoako that presents her services, showcases testimonials, explains the importance of early intervention, and lets families schedule appointments online. The site should be professional but warm, use subtle animations, be accessible (WCAG-aware), fast-loading (<3s target), and ready to deploy to Vercel/Netlify. The service is expanding to Ghana — scheduling must support Africa/Accra timezone.
+  <style>
+    :root{
+      --bg-1: linear-gradient(180deg,#f6fbf9 0%, #f0f9f6 40%, #fffefc 100%);
+      --accent-1: #0E6D5A;
+      --accent-2: #1B9C82;
+      --sun: #ffd166;
+      --muted: #4c655d;
+      --card: #ffffff;
+      --glass: rgba(255,255,255,0.72);
+      --radius:16px;
+      --maxw:1100px;
+      --shadow-lg: 0 24px 48px rgba(8,18,14,.08);
+      --shadow-sm: 0 10px 28px rgba(8,18,14,.06);
+      --ease: cubic-bezier(.2,.9,.2,1);
+    }
 
-Primary tech choices (preferred)
-- Next.js (latest) + TypeScript
-- Tailwind CSS for styling + design tokens
-- Framer Motion for accessible animations and micro-interactions
-- shadcn/ui or Headless UI for accessible primitives (optional)
-- React Hook Form + zod for form validation
-- Optional booking: embed Calendly for fastest delivery; provide Cal.com (self-hosted) or Supabase + FullCalendar alternative for in-house booking.
-- Store environment values in .env.local (example file .env.example committed)
+    /* Reset and base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      color:#072423;
+      background:var(--bg-1);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding-bottom:56px;
+    }
+    .container{max-width:var(--maxw);margin:0 auto;padding:1.25rem}
 
-Pages & Components (deliverables)
-- pages/
-  - index.tsx (Home: hero, mission, CTA, services teaser, testimonial teaser)
-  - about.tsx (About Stella: photo, philosophy, experience)
-  - services.tsx (detailed services: Therapy Services, Educational Toys & Resources, Support for Families & Schools; each with who it's for & benefits)
-  - testimonials.tsx (full testimonials + anonymized case overviews)
-  - why.tsx (Why early intervention matters)
-  - contact.tsx (Contact details, contact form, booking widget)
-  - blog/index.tsx (blog skeleton; posts as markdown or MDX in /posts)
-  - _app.tsx, _document.tsx, seo.tsx
-- components/
-  - Header.tsx (logo, nav, sticky, CTA button)
-  - Footer.tsx (contact info, "Now serving Ghana" note)
-  - Hero.tsx (large welcoming image + headline)
-  - ServicesGrid.tsx / ServiceCard.tsx
-  - Testimonials.tsx
-  - ContactForm.tsx (client form + hook to serverless endpoint)
-  - BookingWidget.tsx (Calendly embed + fallback link; also a feature flag env variable to switch to Cal.com or in-house)
-  - Image component wrappers using next/image
-  - AnimatedButton.tsx (Framer Motion micro-interaction)
-  - SEOHead.tsx (meta tags, OpenGraph)
-  - Accessibility components (SkipNav, FocusTrap, VisuallyHidden)
-- styles/
-  - tailwind.config.js with theme tokens for: soft sage green, powder blue, warm beige/earth-neutral, font families (Inter for body, Merriweather or rounded serif for headings)
-  - global.css with accessible focus styles, prefers-reduced-motion handling
+    /* Skip link */
+    .skip{position:absolute;left:-9999px} .skip:focus{left:1rem;top:1rem;background:#fff;padding:.5rem .75rem;border-radius:10px;box-shadow:var(--shadow-sm);z-index:9999}
 
-Booking & Scheduling (two supported flows)
-1) Hosted (fast): Calendly embed
-   - Use Calendly inline embed on contact page + “Schedule a consultation” CTAs open Calendly modal on click.
-   - Support Africa/Accra timezone in Calendly settings and pass timezone if supported by embed.
-   - CTA text options: “Schedule a consultation 📅” or “Book a session (virtual/in-person)”
+    /* Header */
+    header{position:sticky;top:0;background:var(--glass);backdrop-filter: blur(6px);border-bottom:1px solid rgba(6,30,24,.04);z-index:70}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:72px;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:inherit}
+    .mark{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:Merriweather,serif;box-shadow:var(--shadow-sm)}
+    .site-title{font-family:Merriweather,serif;font-size:1rem}
+    nav{display:flex;gap:.6rem;align-items:center}
+    .nav-link{color:var(--muted);text-decoration:none;padding:.45rem;border-radius:10px;font-weight:600;font-size:.95rem}
+    .nav-link:hover,.nav-link:focus{color:var(--accent-1);transform:translateY(-3px)}
+    .cta{background:var(--accent-1);color:#fff;padding:.5rem .85rem;border-radius:10px;text-decoration:none;font-weight:700;box-shadow:0 10px 30px rgba(14,109,90,.12)}
+    .menu-btn{display:inline-flex;background:transparent;border:0;padding:.4rem;border-radius:8px}
 
-2) Self-hosted / In-house (optional, deliverable as a later task)
-   - Cal.com integration (open-source) or custom: Next.js API + Supabase (appointments table) + FullCalendar on admin page.
-   - Payment integration: optional ability to connect Paystack or Flutterwave for Ghana payments (document required envs)
-   - Provide API contract: POST /api/appointments { name, email, phone, service, timezone, date, time } -> returns 201/validation errors.
+    /* Header search tools */
+    .search-row{display:flex;gap:.5rem;align-items:center}
+    .search-input{padding:.45rem .6rem;border-radius:10px;border:1px solid rgba(6,30,24,.06);background:#fff;min-width:180px}
 
-Contact form
-- Use React Hook Form + zod for schema validation.
-- Serverless endpoint: /api/contact (Vercel/Netlify compatible). Accepts JSON, saves to Supabase or sends to email via SMTP/SendGrid. Must include spam protection instructions (reCAPTCHA v3 or hCaptcha).
-- Environment variables in .env.example:
-  - NEXT_PUBLIC_CONTACT_EMAIL=dwomo28@gmail.com
-  - NEXT_PUBLIC_CONTACT_PHONE=053-027-4063
-  - NEXT_PUBLIC_SITE_TITLE="Stella Amoako — Developmental Intervention Specialist"
-  - NEXT_PUBLIC_SITE_URL=https://your-site.example
-  - CALENDLY_URL=https://calendly.com/your-calendly
-  - SUPABASE_URL, SUPABASE_KEY (if using)
-  - PAYMENT_PROVIDER=none|paystack|flutterwave
-  - RECAPTCHA_KEY (if using)
+    /* Hero */
+    .hero{padding:3rem 0;overflow:hidden}
+    .hero-grid{display:flex;flex-direction:column;gap:1rem;align-items:center}
+    .hero-copy{max-width:60ch}
+    h1{font-family:Merriweather,serif;font-size:2.6rem;margin:0;color:var(--accent-1);line-height:1.02;letter-spacing:-0.6px}
+    p.lead{color:var(--muted);margin-top:.6rem;font-size:1.05rem}
+    .actions{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.05rem;border-radius:14px;font-weight:700;border:0;cursor:pointer;transition:transform .22s var(--ease),box-shadow .22s var(--ease)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#fff;box-shadow:0 16px 36px rgba(14,109,90,.12)}
+    .btn-ghost{background:transparent;color:var(--accent-1);border:1px solid rgba(6,30,24,.06)}
+    .subtle{font-size:.95rem;color:var(--muted);margin-top:.6rem}
+    .hero-meta{display:flex;gap:8px;align-items:center;margin-top:.8rem}
 
-Design & Content Guidelines (use these exact copy snippets)
-- Hero headline: “Helping young children with developmental delays thrive”
-- Sub-headline: “With over a decade of experience, Stella Amoako provides early-intervention therapy, educational toys & family-support services.”
-- CTA: “Schedule a consultation 📅”
-- Testimonial (Lorraine): “The program was a blessing. My child made amazing strides and reached goals we thought were out of reach. Stella is loving, caring, very patient and 100% invested in his growth. My family will forever be grateful.” — Lorraine
-- Contact text (footer & contact page): “For more information, please contact us. I look forward to working with you!”
-- Contact info: Phone: 053-027-4063, Email: dwomo28@gmail.com
-- Announcement Badge: “Now serving Ghana — virtual and in-person sessions available.”
+    /* Animated decorative background */
+    .bg-ornament{
+      position:absolute;right:-12%;top:6%;width:60vw;height:120vh;pointer-events:none;opacity:.12;filter:blur(4px);
+      transform:rotate(6deg);
+    }
 
-UX & Accessibility Requirements
-- Mobile-first responsive layout; large tappable CTAs; thumb-friendly nav
-- Semantic HTML, ARIA where needed
-- All images must have descriptive alt text; placeholders flagged with TODO
-- Provide prefers-reduced-motion support: reduce/disable animations when user prefers reduced motion
-- Keyboard focus states, skip-to-content link, and screen-reader announcements for dynamic content (aria-live)
-- Color contrast to meet WCAG AA at minimum
+    /* Illustration container - generated vector, no external assets */
+    .illustration{width:100%;max-width:620px;border-radius:18px;overflow:visible;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)}
+    .illus-wrap{width:100%;height:380px;display:flex;align-items:center;justify-content:center}
 
-Animations & Micro-interactions
-- Use Framer Motion for entry animations and subtle hover/tap effects
-- Keep animations short (150-400ms), use easing, disable for prefers-reduced-motion
-- Examples: hero image fade-in + slide, CTA hover lift, form submission success micro-toast
+    /* Sections & layout */
+    section{padding:1.8rem 0}
+    .section-title{font-family:Merriweather,serif;margin:0 0 .6rem 0;font-size:1.25rem;color:var(--accent-1)}
+    .muted{color:var(--muted)}
+    .grid{display:grid;gap:14px}
+    .three{grid-template-columns:1fr}
+    .card{background:var(--card);padding:1.1rem;border-radius:12px;border:1px solid rgba(6,30,24,.04);box-shadow:var(--shadow-sm)}
+    .service-list{display:grid;gap:12px}
 
-Performance & SEO
-- Next.js SSG for most pages; ISR for blog if CMS used
-- next/image for responsive images + WebP fallback; compress images and keep < 300KB where possible
-- Lighthouse targets: Performance >= 90, Accessibility >= 90, Best Practices >= 90, SEO >= 90
-- Meta tags, Open Graph images, canonical URLs, sitemap.xml, robots.txt
-- Minimal third-party scripts; lazy-load Calendly embed only when user opens booking modal
+    /* Icons */
+    .icon{width:56px;height:56px;flex:0 0 56px;border-radius:12px;background:linear-gradient(135deg,#eef6fb,#f7fbf9);display:flex;align-items:center;justify-content:center}
+    .service-row{display:flex;gap:12px;align-items:flex-start}
 
-File & Repo expectations
-- Create README.md with run, build, deploy instructions; mention env vars and how to swap booking provider
-- Add .env.example and .gitignore
-- Add basic unit tests for form validation (Jest/React Testing Library)
-- Create a migration plan/seed for sample testimonials and a sample blog post (posts/sample.md)
-- Commit messages convention: feat/, fix/, chore/, docs/ — create branch feature/initial-site and open PR to main
+    /* Testimonial */
+    .testimonial{background:linear-gradient(180deg,#fff,#fbfffb);padding:1.05rem;border-radius:12px;border:1px solid rgba(6,30,24,.04)}
+    .quote{font-style:italic;color:#0b3b37}
 
-Acceptance Criteria / QA checklist
-- All pages render without JS (content visible) or at least have SEO-friendly content
-- CTAs “Schedule a consultation” open booking widget or show fallback email/phone
-- Contact form validates client-side and sends to /api/contact (stub works in dev)
-- Calendly embed works and respects timezone (Africa/Accra)
-- Lighthouse audit run documented in README
-- Accessibility checklist passed: skip link, keyboard nav, alt attributes, reduced-motion respected
-- Mobile & Desktop screenshots captured and linked in PR
+    /* Contact */
+    .contact-grid{display:grid;gap:12px}
+    label{display:block;margin-bottom:.25rem;font-size:.95rem}
+    input,textarea,select{width:100%;padding:.6rem;border-radius:10px;border:1px solid #e7f3ef;background:#fff;font-family:inherit}
+    input:focus,textarea:focus,select:focus{outline:3px solid rgba(27,156,130,.12);outline-offset:2px}
+    .note{font-size:.9rem;color:var(--muted)}
 
-Extra polish (optional, high-priority)
-- Tiny animated SVG logo (subtle)
-- Emoji use: allowed sparingly in CTAs and headings (📅, ❤️, ✅) — keep professional
-- Blog skeleton uses MDX for future rich content
-- Analytics: lightweight analytics (Plausible or Fathom) configured in README for privacy
-- Provide deployment config for Vercel with environment variable examples and preview URL setup
+    /* Footer */
+    footer{background:transparent;border-top:1px solid rgba(6,30,24,.04);padding:1.4rem 0;margin-top:18px}
+    .footer-grid{display:flex;flex-direction:column;gap:.6rem;align-items:flex-start}
 
-Implementation hints & small code snippets to use in project
-- Calendly inline embed (React):
-  - Use react-calendly or simple embed script. Example embed:
-    <InlineWidget url={process.env.NEXT_PUBLIC_CALENDLY_URL} styles={{height: '600px'}} />
-- Framer Motion button:
-  - <motion.button whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.18 }}>Schedule</motion.button>
-- prefers-reduced-motion:
-  - const shouldReduceMotion = useReducedMotion(); if(shouldReduceMotion) disable animations
-- Contact API skeleton (Next.js API route):
-  - POST /api/contact -> validate body, rate-limit, send email via SendGrid or store to Supabase.
+    /* Modal */
+    .modal{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;padding:1rem}
+    .modal.open{display:flex}
+    .backdrop{position:fixed;inset:0;background:rgba(4,10,8,.45)}
+    .modal-panel{position:relative;width:100%;max-width:920px;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 24px 48px rgba(6,12,8,.28)}
 
-Project tasks to create in repo (issue titles)
-- feat: scaffold Next.js + TypeScript + Tailwind
-- feat: implement Header/Footer + global styles + theme tokens
-- feat: implement Home page (hero, mission, services teaser)
-- feat: implement About + Services + Testimonials pages
-- feat: contact page with Calendly embed + contact form
-- chore: add .env.example and README
-- test: add form validation unit tests
-- ci: add Github Actions for lint + test + build
-- docs: accessibility checklist & Lighthouse report
+    /* Animations and micro interactions */
+    .float { animation:float 6s ease-in-out infinite; }
+    @keyframes float{ 0%{ transform:translateY(0) } 50%{ transform:translateY(-8px) } 100%{ transform:translateY(0) } }
 
-Deliverable (what to produce for first PR)
-- Working Next.js app in feature/initial-site with all pages above wired, placeholder images in public/images/, README with setup instructions, .env.example, Calendly embed configured via env var, contact form stub to /api/contact that logs to console (or uses SendGrid if env set).
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+    .reveal.visible{opacity:1;transform:none}
+    .btn-primary:hover{transform:translateY(-4px)}
+    .card:hover{transform:translateY(-6px)}
+    @media (prefers-reduced-motion: reduce){ .float, .reveal, .btn-primary, .card{animation:none;transition:none} }
 
-Tone & design notes for UI/UX
-- Calm, muted palette: soft sage green (#8fb89b), powder blue accents, warm beige background; generous whitespace
-- Typography: Sans-serif body, friendly serif or rounded heading
-- Professional but warm: use small, tasteful emojis in CTAs only (e.g., "Schedule a consultation 📅")
-- Keep visuals authentic: placeholders must be clearly labeled TODO to replace with Stella's photos
+    /* Responsive */
+    @media(min-width:720px){
+      .hero-grid{flex-direction:row;align-items:center;justify-content:space-between}
+      .three{grid-template-columns:repeat(3,1fr)}
+      .contact-grid{grid-template-columns:2fr 1fr}
+      nav{display:flex}
+      .menu-btn{display:none}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
 
-If any third-party booking is used, document fallback flow for users without access to widget (click to call, mailto link, or simple in-page form).
+  <header role="banner" aria-label="Top header">
+    <div class="container header-inner">
+      <a href="#home" class="brand" aria-label="Home Stella Amoako">
+        <div class="mark" aria-hidden>SA</div>
+        <div>
+          <div class="site-title">Stella Amoako</div>
+          <div class="muted" style="font-size:.85rem">Developmental Intervention Specialist</div>
+        </div>
+      </a>
 
-Please implement this as the initial working site. Once the initial PR is open, add improvements in follow-up PRs: serverless contact, reCAPTCHA, payments for Ghana (optional), CMS for blog, and Cal.com self-hosted booking if desired.
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div class="search-row" role="search" aria-label="Search tools">
+          <input class="search-input" id="siteSearch" placeholder="Search resources e.g. toys for language" aria-label="Search resources">
+          <input class="search-input" id="webSearch" placeholder="Search the web" aria-label="Search the web">
+          <button class="btn btn-ghost" id="searchBtn" title="Search">Search 🔎</button>
+        </div>
+
+        <nav role="navigation" aria-label="Primary navigation">
+          <a class="nav-link" href="#about">About</a>
+          <a class="nav-link" href="#services">Services</a>
+          <a class="nav-link" href="#testimonials">Testimonials</a>
+          <a class="nav-link" href="#contact">Contact</a>
+        </nav>
+
+        <a class="cta" href="#contact">Book a consultation 📅</a>
+      </div>
+
+      <button class="menu-btn" aria-controls="mobileMenu" aria-expanded="false" id="menuToggle" aria-label="Open menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M4 6h16M4 12h16M4 18h16" stroke="#072423" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div id="mobileMenu" style="display:none;background:var(--card);border-top:1px solid rgba(6,30,24,.04)">
+      <div class="container" style="display:flex;flex-direction:column;padding:.5rem">
+        <a href="#about" style="padding:.5rem 0">About</a>
+        <a href="#services" style="padding:.5rem 0">Services</a>
+        <a href="#testimonials" style="padding:.5rem 0">Testimonials</a>
+        <a href="#contact" style="padding:.5rem 0">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- decorative animated background -->
+  <svg class="bg-ornament" viewBox="0 0 800 1200" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="lg" x1="0" x2="1">
+        <stop offset="0" stop-color="#e6fbf3"/>
+        <stop offset="1" stop-color="#f6fff9"/>
+      </linearGradient>
+    </defs>
+    <g transform="rotate(14 400 600)" fill="url(#lg)">
+      <ellipse cx="400" cy="400" rx="320" ry="220" />
+      <ellipse cx="520" cy="900" rx="280" ry="200" opacity="0.9" />
+    </g>
+  </svg>
+
+  <main id="main" role="main" aria-label="Main content">
+    <!-- HERO -->
+    <section id="home" class="hero" aria-labelledby="heroHeading">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal" data-reveal>
+          <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.45rem">
+            <div style="background:var(--sun);padding:.25rem .6rem;border-radius:999px;font-weight:700;color:#3b3b3b">Now serving Ghana</div>
+            <div class="muted" style="font-size:.95rem">Virtual and in person sessions available</div>
+          </div>
+
+          <h1 id="heroHeading">Helping young children with developmental delays thrive</h1>
+
+          <p class="lead">With more than ten years of experience as an educator, Stella brings warm expert guidance to early intervention, child development supports and family coaching. Practical tools, playful learning and partnership with families.</p>
+
+          <div class="hero-meta">
+            <div style="display:flex;gap:10px;align-items:center">
+              <div style="font-weight:700;color:var(--accent-2)">Quick call</div>
+              <a href="tel:0530274063" style="color:var(--accent-1);font-weight:700">0530274063</a>
+            </div>
+            <div style="color:var(--muted);font-size:.95rem"> • </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div style="font-weight:700;color:#814b00">Testimonial</div>
+              <div class="muted">“The program was a blessing — my child made amazing progress.” — Lorraine</div>
+            </div>
+          </div>
+
+          <div class="actions" role="group" aria-label="Primary actions" style="margin-top:12px">
+            <button class="btn btn-primary" id="openBooking"><span aria-hidden class="emoji">📅</span> Book a consultation</button>
+            <button class="btn btn-ghost" id="learnMore">Learn about services <span aria-hidden class="emoji">✨</span></button>
+            <a class="btn btn-ghost" href="#contact" aria-label="Contact Stella">Contact Stella ✉️</a>
+          </div>
+
+          <p class="subtle">Therapy focused on real life goals — games, daily routines and caregiver coaching that make a difference.</p>
+        </div>
+
+        <!-- Decorative generated vector illustration - friendly and animated -->
+        <figure class="illustration reveal float" data-reveal aria-hidden="true" aria-label="Illustration of child and practitioner playing">
+          <div class="illus-wrap" role="img" aria-label="Illustration of therapy play scene">
+            <!-- Warm playful SVG scene with subtle motion -->
+            <svg width="100%" height="100%" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="presentation">
+              <defs>
+                <linearGradient id="bg" x1="0" x2="1"><stop offset="0" stop-color="#fbfff9"/><stop offset="1" stop-color="#f0fff4"/></linearGradient>
+                <linearGradient id="sun" x1="0" x2="1"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#ffb36a"/></linearGradient>
+              </defs>
+
+              <rect x="0" y="0" width="1200" height="600" rx="12" fill="url(#bg)"></rect>
+
+              <!-- animated sun -->
+              <g transform="translate(120,100)">
+                <circle cx="0" cy="0" r="48" fill="url(#sun)">
+                  <animate attributeName="r" dur="6s" values="46;52;46" repeatCount="indefinite" />
+                </circle>
+              </g>
+
+              <!-- abstract play rug -->
+              <ellipse cx="600" cy="420" rx="420" ry="110" fill="#e8f9f3" />
+
+              <!-- caregiver (stylized) -->
+              <g transform="translate(420,200)">
+                <circle cx="-30" cy="24" r="34" fill="#ffefdf"/>
+                <rect x="-64" y="78" width="64" height="88" rx="12" fill="#ffefe0"/>
+                <path d="M10 96 q40 18 80 0" stroke="#1B9C82" stroke-width="10" fill="none" stroke-linecap="round"/>
+              </g>
+
+              <!-- child (stylized) -->
+              <g transform="translate(700,260)">
+                <circle cx="-18" cy="22" r="26" fill="#fff3e6"/>
+                <rect x="-44" y="58" width="44" height="64" rx="10" fill="#fff7ed" />
+                <path d="M6 90 q26 12 54 0" stroke="#0E6D5A" stroke-width="8" fill="none" stroke-linecap="round"/>
+              </g>
+
+              <!-- toy blocks -->
+              <g transform="translate(620,360)">
+                <rect x="-60" y="-28" width="48" height="48" rx="8" fill="#ffd166" />
+                <rect x="4" y="-20" width="48" height="48" rx="8" fill="#cfead8" />
+              </g>
+
+              <!-- decorative dots -->
+              <g fill="#cfead8" opacity="0.9">
+                <circle cx="980" cy="80" r="8"><animate attributeName="cy" dur="9s" values="80;68;80" repeatCount="indefinite" /></circle>
+                <circle cx="1100" cy="220" r="6"></circle>
+                <circle cx="1000" cy="520" r="10"></circle>
+              </g>
+            </svg>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" aria-labelledby="aboutHeading">
+      <div class="container">
+        <h2 id="aboutHeading" class="section-title reveal" data-reveal>About Stella</h2>
+        <div class="grid three" style="margin-top:10px">
+          <div class="card reveal" data-reveal>
+            <div style="font-weight:700">Who is Stella</div>
+            <p class="muted">Stella Amoako is a developmental intervention specialist and educator with over ten years of experience. She works closely with families to create everyday learning moments that build skills and confidence.</p>
+          </div>
+
+          <div class="card reveal" data-reveal>
+            <div style="font-weight:700">Philosophy</div>
+            <p class="muted">Early intervention works best when caregivers are partners. Stella uses playful routines and practical strategies that families can use every day.</p>
+          </div>
+
+          <div class="card reveal" data-reveal>
+            <div style="font-weight:700">Mission</div>
+            <p class="muted">To help babies and young children with developmental delays thrive by giving them and their families tools and support.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" aria-labelledby="servicesHeading">
+      <div class="container">
+        <h2 id="servicesHeading" class="section-title reveal" data-reveal>Services</h2>
+        <p class="muted reveal" data-reveal style="margin-top:6px">Practical supports for children, families and schools delivered with warmth and expertise.</p>
+
+        <div class="grid three service-list" style="margin-top:12px">
+          <article class="card reveal" data-reveal aria-labelledby="s1">
+            <div class="service-row">
+              <div class="icon" aria-hidden>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" fill="#eef6fb"/><path d="M8 12s1.5-4 4-4 4 4 4 4-1.5 4-4 4-4-4-4-4z" fill="#0E6D5A"/></svg>
+              </div>
+              <div>
+                <h3 id="s1">Therapy Services</h3>
+                <p class="muted">Individual therapy plans for babies and young children with developmental needs. Sessions focus on communication, play and daily routines.</p>
+                <p class="muted"><strong>Who</strong>: families with infants and preschool children</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-reveal aria-labelledby="s2">
+            <div class="service-row">
+              <div class="icon" aria-hidden>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" fill="#fff7e6"/><path d="M8 9h8v6H8z" fill="#ffd166" /><circle cx="10.5" cy="12" r="1" fill="#0E6D5A"/></svg>
+              </div>
+              <div>
+                <h3 id="s2">Educational Toys and Resources</h3>
+                <p class="muted">Carefully chosen toys and activity guides that support milestones and meaningful play.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-reveal aria-labelledby="s3">
+            <div class="service-row">
+              <div class="icon" aria-hidden>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" fill="#eaf7f2"/><path d="M12 7l6 3.5-6 3.5L6 10.5 12 7z" fill="#1B9C82"/></svg>
+              </div>
+              <div>
+                <h3 id="s3">Support for Families and Schools</h3>
+                <p class="muted">Workshops, coaching and in class support to help caregivers and teachers carry strategies into daily life.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div style="margin-top:14px">
+          <button class="btn btn-primary" id="contactStart">Contact us to get started ✅</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" aria-labelledby="testiHeading">
+      <div class="container">
+        <h2 id="testiHeading" class="section-title reveal" data-reveal>Testimonials and success stories</h2>
+        <p class="muted reveal" data-reveal style="margin-top:6px">Families share their gratitude and results.</p>
+
+        <div style="display:grid;gap:12px;margin-top:12px">
+          <figure class="testimonial reveal" data-reveal role="article" aria-label="Testimonial from Lorraine">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:56px;height:56px;border-radius:999px;background:linear-gradient(135deg,#ffd166,#ffb36a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#814b00">L</div>
+              <div>
+                <blockquote class="quote">“The program was a blessing. My child made amazing strides and reached goals we thought were out of reach. Stella is loving, caring, very patient and 100% invested in his growth. My family will forever be grateful.”</blockquote>
+                <figcaption class="muted">— Lorraine <span aria-hidden class="emoji">❤️</span></figcaption>
+              </div>
+            </div>
+          </figure>
+
+          <article class="testimonial reveal" data-reveal aria-labelledby="case1">
+            <h3 id="case1" style="margin-top:0">Short case overview</h3>
+            <p class="muted">A two year old with delayed expressive language made measurable gains after caregiver coaching and short repeated play sessions tailored to family routines.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY -->
+    <section id="why" aria-labelledby="whyHeading">
+      <div class="container">
+        <h2 id="whyHeading" class="section-title reveal" data-reveal>Why early intervention matters</h2>
+        <p class="lead reveal" data-reveal style="margin-top:6px">Starting early improves communication, play and daily living skills. Families learn sustainable strategies that last.</p>
+
+        <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+          <div class="card reveal" data-reveal style="flex:1;min-width:220px">
+            <strong>Brain potential</strong>
+            <div class="muted">Younger children respond rapidly to focused learning opportunities.</div>
+          </div>
+          <div class="card reveal" data-reveal style="flex:1;min-width:220px">
+            <strong>Family confidence</strong>
+            <div class="muted">Coaching gives caregivers skills that multiply progress across settings.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources" aria-labelledby="resourcesHeading">
+      <div class="container">
+        <h2 id="resourcesHeading" class="section-title reveal" data-reveal>Resources and blog</h2>
+        <p class="muted reveal" data-reveal style="margin-top:6px">Soon: helpful articles, activity guides and toy suggestions that help families and teachers.</p>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" aria-labelledby="contactHeading">
+      <div class="container">
+        <h2 id="contactHeading" class="section-title reveal" data-reveal>Contact and booking</h2>
+        <p class="lead reveal" data-reveal style="margin-top:6px">For more information please contact us. I look forward to working with you.</p>
+
+        <div class="contact-grid" style="margin-top:12px">
+          <div class="reveal" data-reveal>
+            <div style="margin-bottom:10px">
+              <strong>Phone:</strong> <a id="phoneLink" href="tel:0530274063">0530274063</a><br/>
+              <strong>Email:</strong> <a id="emailLink" href="mailto:dwomo28@gmail.com">dwomo28@gmail.com</a>
+            </div>
+
+            <form id="contactForm" novalidate aria-describedby="contactHelp" aria-live="polite">
+              <div style="margin-bottom:10px">
+                <label for="c-name">Name</label>
+                <input id="c-name" name="name" autocomplete="name" required />
+                <div class="note" id="err-name" style="display:none;color:#B91C1C"></div>
+              </div>
+
+              <div style="margin-bottom:10px">
+                <label for="c-email">Email</label>
+                <input id="c-email" name="email" type="email" autocomplete="email" required />
+                <div class="note" id="err-email" style="display:none;color:#B91C1C"></div>
+              </div>
+
+              <div style="margin-bottom:10px">
+                <label for="c-service">Service</label>
+                <select id="c-service" name="service" aria-label="Select a service">
+                  <option>Therapy Services</option>
+                  <option>Educational Toys and Resources</option>
+                  <option>Support for Families and Schools</option>
+                </select>
+              </div>
+
+              <div style="margin-bottom:10px">
+                <label for="c-message">Message</label>
+                <textarea id="c-message" name="message" rows="5" required></textarea>
+                <div class="note" id="err-msg" style="display:none;color:#B91C1C"></div>
+              </div>
+
+              <div style="display:flex;gap:.6rem;align-items:center">
+                <button type="submit" class="btn btn-primary" id="sendBtn">Send message</button>
+                <button type="button" class="btn btn-ghost" id="openBookingBtn">Open booking widget</button>
+                <div id="formStatus" class="note" aria-live="polite" style="margin-left:8px"></div>
+              </div>
+            </form>
+
+            <p id="contactHelp" class="note" style="margin-top:8px">Note: The contact form will POST to a configured endpoint if provided; otherwise it opens your email client as a fallback. Add spam protection for production.</p>
+          </div>
+
+          <aside class="reveal" data-reveal>
+            <div class="card">
+              <strong>Now serving Ghana</strong>
+              <p class="muted" style="margin:6px 0 0 0">Virtual sessions available. Contact to check availability for in person visits and scheduling.</p>
+            </div>
+
+            <div style="height:12px"></div>
+
+            <div class="card">
+              <strong>Quick activity ideas</strong>
+              <ul class="muted">
+                <li>Simple naming play using toys to support language.</li>
+                <li>Turn routines into teaching moments with toy interaction.</li>
+                <li>Short repeated practice sessions daily.</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container footer-grid" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div>
+        <div style="font-family:Merriweather,serif;font-weight:700">Stella Amoako</div>
+        <div class="muted">Developmental Intervention Specialist</div>
+      </div>
+
+      <div class="muted">
+        Phone: <a id="footerPhone" href="tel:0530274063">0530274063</a><br/>
+        Email: <a id="footerEmail" href="mailto:dwomo28@gmail.com">dwomo28@gmail.com</a>
+      </div>
+
+      <div class="muted" style="text-align:right">© <span id="year"></span> Stella Amoako</div>
+    </div>
+  </footer>
+
+  <!-- Booking modal -->
+  <div id="bookingModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+    <div class="backdrop" id="modalBackdrop"></div>
+    <div class="modal-panel" role="document">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem;border-bottom:1px solid rgba(6,30,24,.04)">
+        <div id="bookingTitle" style="font-weight:700">Schedule a consultation</div>
+        <button id="closeBooking" aria-label="Close booking" style="background:transparent;border:0;font-size:18px;cursor:pointer">✕</button>
+      </div>
+      <div id="bookingContainer" style="height:640px;">
+        <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted)">Booking widget will appear here</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== Configuration ======
+    const CALENDLY_URL = ""; // set to Calendly page to enable embed
+    const FORM_ENDPOINT = ""; // set to your JSON POST endpoint (optional)
+    const PHONE = "0530274063";
+    const EMAIL = "dwomo28@gmail.com";
+
+    // ====== DOM wiring ======
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('phoneLink').href = 'tel:' + PHONE;
+    document.getElementById('footerPhone').href = 'tel:' + PHONE;
+    document.getElementById('emailLink').href = 'mailto:' + EMAIL;
+    document.getElementById('footerEmail').href = 'mailto:' + EMAIL;
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle?.addEventListener('click', () => {
+      const visible = mobileMenu.style.display === 'block';
+      mobileMenu.style.display = visible ? 'none' : 'block';
+      menuToggle.setAttribute('aria-expanded', String(!visible));
+    });
+
+    // Search functionality: two fields
+    const siteSearch = document.getElementById('siteSearch');
+    const webSearch = document.getElementById('webSearch');
+    const searchBtn = document.getElementById('searchBtn');
+
+    searchBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      // siteSearch will search targeted resources (search the web constrained to trusted domains)
+      const siteQ = siteSearch.value.trim();
+      const webQ = webSearch.value.trim();
+
+      if (siteQ){
+        // search high quality resource sites for early intervention content
+        // quick Google search across reputable domains
+        const query = encodeURIComponent(siteQ + ' early intervention site:org OR site:edu OR site:gov');
+        window.open('https://www.google.com/search?q=' + query, '_blank');
+        return;
+      }
+      if (webQ){
+        const query = encodeURIComponent(webQ + ' early intervention Ghana');
+        window.open('https://www.google.com/search?q=' + query, '_blank');
+      }
+    });
+
+    // Reveal on scroll
+    const reveals = Array.from(document.querySelectorAll('.reveal'));
+    const obs = ('IntersectionObserver' in window) ? new IntersectionObserver((entries, o) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add('visible');
+          o.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.12}) : null;
+    reveals.forEach(r => { if (obs) obs.observe(r); else r.classList.add('visible'); });
+
+    // Booking modal behavior
+    const bookingModal = document.getElementById('bookingModal');
+    const bookingContainer = document.getElementById('bookingContainer');
+    const openBooking = document.getElementById('openBooking');
+    const openBookingBtn = document.getElementById('openBookingBtn');
+    const closeBooking = document.getElementById('closeBooking');
+    const backdrop = document.getElementById('modalBackdrop');
+
+    function showBooking(){
+      if (!CALENDLY_URL){
+        const subject = encodeURIComponent('Appointment request');
+        const body = encodeURIComponent('Hello Stella,%0A%0AI would like to schedule a consultation.%0A%0AThank you.');
+        window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+        return;
+      }
+      bookingContainer.innerHTML = '';
+      const iframe = document.createElement('iframe');
+      iframe.src = CALENDLY_URL.replace(/\/$/, '') + '/embed';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = '0';
+      iframe.title = 'Booking widget';
+      bookingContainer.appendChild(iframe);
+      bookingModal.classList.add('open');
+      bookingModal.setAttribute('aria-hidden','false');
+      closeBooking.focus();
+    }
+
+    function hideBooking(){
+      bookingModal.classList.remove('open');
+      bookingModal.setAttribute('aria-hidden','true');
+      bookingContainer.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted)">Booking widget will appear here</div>';
+      document.querySelector('.btn-primary')?.focus();
+    }
+
+    openBooking?.addEventListener('click', (e)=>{ e.preventDefault(); showBooking(); });
+    openBookingBtn?.addEventListener('click', (e)=>{ e.preventDefault(); showBooking(); });
+    closeBooking?.addEventListener('click', hideBooking);
+    backdrop?.addEventListener('click', hideBooking);
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && bookingModal.classList.contains('open')) hideBooking(); });
+
+    // Contact form
+    const form = document.getElementById('contactForm');
+    const sendBtn = document.getElementById('sendBtn');
+    const errName = document.getElementById('err-name');
+    const errEmail = document.getElementById('err-email');
+    const errMsg = document.getElementById('err-msg');
+    const formStatus = document.getElementById('formStatus');
+
+    function clearErr(){ [errName,errEmail,errMsg].forEach(el=>{ if(el){ el.style.display='none'; el.textContent=''; }}); formStatus.textContent=''; }
+    function validEmail(e){ return /\S+@\S+\.\S+/.test(e); }
+
+    async function postData(payload){
+      if (!FORM_ENDPOINT){
+        const subject = encodeURIComponent('Website contact: ' + (payload.name || ''));
+        const body = encodeURIComponent(`${payload.message}\n\n--\n${payload.name}\n${payload.email}\nService: ${payload.service || ''}`);
+        window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+        return { ok:true, fallback:true };
+      }
+      try {
+        const res = await fetch(FORM_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error('Network error');
+        return { ok:true };
+      } catch (err){
+        console.error(err);
+        return { ok:false };
+      }
+    }
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErr();
+      const name = form['name'].value.trim();
+      const email = form['email'].value.trim();
+      const message = form['message'].value.trim();
+      const service = form['service'].value;
+
+      let bad = false;
+      if (!name){ errName.style.display='block'; errName.textContent='Please enter your name'; bad=true; }
+      if (!validEmail(email)){ errEmail.style.display='block'; errEmail.textContent='Please enter a valid email'; bad=true; }
+      if (message.length < 5){ errMsg.style.display='block'; errMsg.textContent='Please write a short message'; bad=true; }
+      if (bad) return;
+
+      sendBtn.disabled = true;
+      formStatus.textContent = 'Sending…';
+
+      const payload = { name, email, message, service, ts:new Date().toISOString() };
+      const res = await postData(payload);
+      if (res.ok){
+        if (res.fallback) formStatus.textContent = 'Opened your email client to send the message.';
+        else { formStatus.textContent = 'Message sent — thank you!'; form.reset(); }
+      } else {
+        formStatus.textContent = 'Error sending message. Please email: ' + EMAIL;
+      }
+      sendBtn.disabled = false;
+    });
+
+    // Services contact quick link
+    document.getElementById('contactStart')?.addEventListener('click', ()=>{
+      document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'});
+      document.getElementById('c-name')?.focus();
+    });
+
+    // keyboard focus ring for keyboard users
+    (function(){ function firstTab(e){ if(e.key === 'Tab') document.documentElement.classList.add('user-is-tabbing'); } window.addEventListener('keydown', firstTab, { once:true }); })();
+  </script>
+</body>
+</html>
