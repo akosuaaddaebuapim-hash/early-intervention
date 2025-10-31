@@ -1,1 +1,151 @@
 
+Project: Stella Amoako — Developmental Intervention Specialist (single repo)
+
+Goal
+Build a modern, mobile-first, responsive website for Stella Amoako that presents her services, showcases testimonials, explains the importance of early intervention, and lets families schedule appointments online. The site should be professional but warm, use subtle animations, be accessible (WCAG-aware), fast-loading (<3s target), and ready to deploy to Vercel/Netlify. The service is expanding to Ghana — scheduling must support Africa/Accra timezone.
+
+Primary tech choices (preferred)
+- Next.js (latest) + TypeScript
+- Tailwind CSS for styling + design tokens
+- Framer Motion for accessible animations and micro-interactions
+- shadcn/ui or Headless UI for accessible primitives (optional)
+- React Hook Form + zod for form validation
+- Optional booking: embed Calendly for fastest delivery; provide Cal.com (self-hosted) or Supabase + FullCalendar alternative for in-house booking.
+- Store environment values in .env.local (example file .env.example committed)
+
+Pages & Components (deliverables)
+- pages/
+  - index.tsx (Home: hero, mission, CTA, services teaser, testimonial teaser)
+  - about.tsx (About Stella: photo, philosophy, experience)
+  - services.tsx (detailed services: Therapy Services, Educational Toys & Resources, Support for Families & Schools; each with who it's for & benefits)
+  - testimonials.tsx (full testimonials + anonymized case overviews)
+  - why.tsx (Why early intervention matters)
+  - contact.tsx (Contact details, contact form, booking widget)
+  - blog/index.tsx (blog skeleton; posts as markdown or MDX in /posts)
+  - _app.tsx, _document.tsx, seo.tsx
+- components/
+  - Header.tsx (logo, nav, sticky, CTA button)
+  - Footer.tsx (contact info, "Now serving Ghana" note)
+  - Hero.tsx (large welcoming image + headline)
+  - ServicesGrid.tsx / ServiceCard.tsx
+  - Testimonials.tsx
+  - ContactForm.tsx (client form + hook to serverless endpoint)
+  - BookingWidget.tsx (Calendly embed + fallback link; also a feature flag env variable to switch to Cal.com or in-house)
+  - Image component wrappers using next/image
+  - AnimatedButton.tsx (Framer Motion micro-interaction)
+  - SEOHead.tsx (meta tags, OpenGraph)
+  - Accessibility components (SkipNav, FocusTrap, VisuallyHidden)
+- styles/
+  - tailwind.config.js with theme tokens for: soft sage green, powder blue, warm beige/earth-neutral, font families (Inter for body, Merriweather or rounded serif for headings)
+  - global.css with accessible focus styles, prefers-reduced-motion handling
+
+Booking & Scheduling (two supported flows)
+1) Hosted (fast): Calendly embed
+   - Use Calendly inline embed on contact page + “Schedule a consultation” CTAs open Calendly modal on click.
+   - Support Africa/Accra timezone in Calendly settings and pass timezone if supported by embed.
+   - CTA text options: “Schedule a consultation 📅” or “Book a session (virtual/in-person)”
+
+2) Self-hosted / In-house (optional, deliverable as a later task)
+   - Cal.com integration (open-source) or custom: Next.js API + Supabase (appointments table) + FullCalendar on admin page.
+   - Payment integration: optional ability to connect Paystack or Flutterwave for Ghana payments (document required envs)
+   - Provide API contract: POST /api/appointments { name, email, phone, service, timezone, date, time } -> returns 201/validation errors.
+
+Contact form
+- Use React Hook Form + zod for schema validation.
+- Serverless endpoint: /api/contact (Vercel/Netlify compatible). Accepts JSON, saves to Supabase or sends to email via SMTP/SendGrid. Must include spam protection instructions (reCAPTCHA v3 or hCaptcha).
+- Environment variables in .env.example:
+  - NEXT_PUBLIC_CONTACT_EMAIL=dwomo28@gmail.com
+  - NEXT_PUBLIC_CONTACT_PHONE=053-027-4063
+  - NEXT_PUBLIC_SITE_TITLE="Stella Amoako — Developmental Intervention Specialist"
+  - NEXT_PUBLIC_SITE_URL=https://your-site.example
+  - CALENDLY_URL=https://calendly.com/your-calendly
+  - SUPABASE_URL, SUPABASE_KEY (if using)
+  - PAYMENT_PROVIDER=none|paystack|flutterwave
+  - RECAPTCHA_KEY (if using)
+
+Design & Content Guidelines (use these exact copy snippets)
+- Hero headline: “Helping young children with developmental delays thrive”
+- Sub-headline: “With over a decade of experience, Stella Amoako provides early-intervention therapy, educational toys & family-support services.”
+- CTA: “Schedule a consultation 📅”
+- Testimonial (Lorraine): “The program was a blessing. My child made amazing strides and reached goals we thought were out of reach. Stella is loving, caring, very patient and 100% invested in his growth. My family will forever be grateful.” — Lorraine
+- Contact text (footer & contact page): “For more information, please contact us. I look forward to working with you!”
+- Contact info: Phone: 053-027-4063, Email: dwomo28@gmail.com
+- Announcement Badge: “Now serving Ghana — virtual and in-person sessions available.”
+
+UX & Accessibility Requirements
+- Mobile-first responsive layout; large tappable CTAs; thumb-friendly nav
+- Semantic HTML, ARIA where needed
+- All images must have descriptive alt text; placeholders flagged with TODO
+- Provide prefers-reduced-motion support: reduce/disable animations when user prefers reduced motion
+- Keyboard focus states, skip-to-content link, and screen-reader announcements for dynamic content (aria-live)
+- Color contrast to meet WCAG AA at minimum
+
+Animations & Micro-interactions
+- Use Framer Motion for entry animations and subtle hover/tap effects
+- Keep animations short (150-400ms), use easing, disable for prefers-reduced-motion
+- Examples: hero image fade-in + slide, CTA hover lift, form submission success micro-toast
+
+Performance & SEO
+- Next.js SSG for most pages; ISR for blog if CMS used
+- next/image for responsive images + WebP fallback; compress images and keep < 300KB where possible
+- Lighthouse targets: Performance >= 90, Accessibility >= 90, Best Practices >= 90, SEO >= 90
+- Meta tags, Open Graph images, canonical URLs, sitemap.xml, robots.txt
+- Minimal third-party scripts; lazy-load Calendly embed only when user opens booking modal
+
+File & Repo expectations
+- Create README.md with run, build, deploy instructions; mention env vars and how to swap booking provider
+- Add .env.example and .gitignore
+- Add basic unit tests for form validation (Jest/React Testing Library)
+- Create a migration plan/seed for sample testimonials and a sample blog post (posts/sample.md)
+- Commit messages convention: feat/, fix/, chore/, docs/ — create branch feature/initial-site and open PR to main
+
+Acceptance Criteria / QA checklist
+- All pages render without JS (content visible) or at least have SEO-friendly content
+- CTAs “Schedule a consultation” open booking widget or show fallback email/phone
+- Contact form validates client-side and sends to /api/contact (stub works in dev)
+- Calendly embed works and respects timezone (Africa/Accra)
+- Lighthouse audit run documented in README
+- Accessibility checklist passed: skip link, keyboard nav, alt attributes, reduced-motion respected
+- Mobile & Desktop screenshots captured and linked in PR
+
+Extra polish (optional, high-priority)
+- Tiny animated SVG logo (subtle)
+- Emoji use: allowed sparingly in CTAs and headings (📅, ❤️, ✅) — keep professional
+- Blog skeleton uses MDX for future rich content
+- Analytics: lightweight analytics (Plausible or Fathom) configured in README for privacy
+- Provide deployment config for Vercel with environment variable examples and preview URL setup
+
+Implementation hints & small code snippets to use in project
+- Calendly inline embed (React):
+  - Use react-calendly or simple embed script. Example embed:
+    <InlineWidget url={process.env.NEXT_PUBLIC_CALENDLY_URL} styles={{height: '600px'}} />
+- Framer Motion button:
+  - <motion.button whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.18 }}>Schedule</motion.button>
+- prefers-reduced-motion:
+  - const shouldReduceMotion = useReducedMotion(); if(shouldReduceMotion) disable animations
+- Contact API skeleton (Next.js API route):
+  - POST /api/contact -> validate body, rate-limit, send email via SendGrid or store to Supabase.
+
+Project tasks to create in repo (issue titles)
+- feat: scaffold Next.js + TypeScript + Tailwind
+- feat: implement Header/Footer + global styles + theme tokens
+- feat: implement Home page (hero, mission, services teaser)
+- feat: implement About + Services + Testimonials pages
+- feat: contact page with Calendly embed + contact form
+- chore: add .env.example and README
+- test: add form validation unit tests
+- ci: add Github Actions for lint + test + build
+- docs: accessibility checklist & Lighthouse report
+
+Deliverable (what to produce for first PR)
+- Working Next.js app in feature/initial-site with all pages above wired, placeholder images in public/images/, README with setup instructions, .env.example, Calendly embed configured via env var, contact form stub to /api/contact that logs to console (or uses SendGrid if env set).
+
+Tone & design notes for UI/UX
+- Calm, muted palette: soft sage green (#8fb89b), powder blue accents, warm beige background; generous whitespace
+- Typography: Sans-serif body, friendly serif or rounded heading
+- Professional but warm: use small, tasteful emojis in CTAs only (e.g., "Schedule a consultation 📅")
+- Keep visuals authentic: placeholders must be clearly labeled TODO to replace with Stella's photos
+
+If any third-party booking is used, document fallback flow for users without access to widget (click to call, mailto link, or simple in-page form).
+
+Please implement this as the initial working site. Once the initial PR is open, add improvements in follow-up PRs: serverless contact, reCAPTCHA, payments for Ghana (optional), CMS for blog, and Cal.com self-hosted booking if desired.
